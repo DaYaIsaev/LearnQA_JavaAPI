@@ -1,5 +1,3 @@
-
-import io.restassured.http.Headers;
 import org.junit.jupiter.api.Test;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
