@@ -24,7 +24,7 @@ public class HomeworkTests {
         Response response = RestAssured
                 .given()
                 .redirects()
-                .follow(false)
+                .follow(true)
                 .get("https://playground.learnqa.ru/api/long_redirect")
                 .andReturn();
 
@@ -32,5 +32,30 @@ public class HomeworkTests {
         System.out.println(headerLocation);
     }
 
+    @Test
+    public void longRedirectTest(){
+            Response response = RestAssured
+                    .given()
+                    .redirects()
+                    .follow(false)
+                    .get("https://playground.learnqa.ru/api/long_redirect")
+                    .andReturn();
+        String headerLocation = response.getHeader("Location");
+        System.out.println(headerLocation);
+        int status = response.getStatusCode();
 
+            while(status!=200){
+                Response nextResponse = RestAssured
+                        .given()
+                        .redirects()
+                        .follow(false)
+                        .get(headerLocation)
+                        .andReturn();
+                status = nextResponse.getStatusCode();
+                headerLocation = nextResponse.getHeader("Location");
+                System.out.println(headerLocation);
+                System.out.println(status);
+            }
+
+        }
 }
