@@ -18,6 +18,7 @@ public class HelloWorldTest {
                 .when()
                 .post("https://playground.learnqa.ru/api/get_auth_cookie")
                 .andReturn();
+        System.out.println(data);
 
         String responseCoockie = responseForGet.getCookie("auth_cookie");
 
