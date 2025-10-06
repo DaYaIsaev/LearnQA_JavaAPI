@@ -3,7 +3,6 @@ package homeWorkTests;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -115,7 +114,6 @@ public class HomeworkTests {
     public void passwordSelectionTest() {
 
         Map<String, String> data = new HashMap<>();
-        //String login = "super_admin";
         data.put("login", "super_admin");
 
         List<String> passwords = getPasswords2019("https://en.wikipedia.org/wiki/List_of_the_most_common_passwords");

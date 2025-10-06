@@ -2,8 +2,6 @@ package lib;
 
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
-
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.hasKey;
