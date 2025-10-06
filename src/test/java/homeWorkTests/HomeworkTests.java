@@ -1,15 +1,22 @@
+package homeWorkTests;
+
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
 import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class HomeworkTests {
@@ -81,11 +88,11 @@ public class HomeworkTests {
         int seconds = json.get("seconds");
         Map<String, Object> fields;
         fields = getJsonFields(token);
-        Assertions.assertEquals(fields.get("status"), expectedStatusNoToken);
+        assertEquals(fields.get("status"), expectedStatusNoToken);
         Thread.sleep(seconds * 1000);
         fields = getJsonFields(token);
-        Assertions.assertEquals(expectedStatusTokenDelay, fields.get("status"));
-        Assertions.assertEquals(expectedResult, fields.get("result"));
+        assertEquals(expectedStatusTokenDelay, fields.get("status"));
+        assertEquals(expectedResult, fields.get("result"));
 
 
     }
@@ -182,4 +189,53 @@ public class HomeworkTests {
         return passwords;
     }
 
+    @Test
+    public void checkShortStringTest(){
+        String hello = "Hello, world";
+        assertTrue( hello.length() > 15,"String should be more than 15 symbols");
+    }
+
+    @Test
+    public void cookieMethodTest() {
+        Response response = RestAssured
+                .get("https://playground.learnqa.ru/api/homework_cookie")
+                .andReturn();
+        String cookieValue = response.getCookie("HomeWork");
+        assertEquals(200, response.getStatusCode(), "Unexpected response status");
+        assertTrue(response.getCookies().containsKey("HomeWork"), "Cookie 'HomeWork' not found in response");
+        assertEquals("hw_value", cookieValue, "Unexpected value cookie for cookie 'HomeWork' " + cookieValue);
+    }
+
+    @Test
+    public void headerMethodTest(){
+        Response response = RestAssured
+                .get("https://playground.learnqa.ru/api/homework_header")
+                .andReturn();
+        String cookieValue = response.getHeaders().getValue("x-secret-homework-header");
+        assertEquals(200, response.getStatusCode(), "Unexpected response status");
+        assertTrue(response.getHeaders().hasHeaderWithName("x-secret-homework-header"),"Header 'x-secret-homework-header' not found in response");
+        assertEquals("Some secret value", cookieValue, "Unexpected value header for header 'x-secret-homework-header' " + cookieValue);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"Mozilla/5.0 (Linux; U; Android 4.0.2; en-us; Galaxy Nexus Build/ICL53F) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30",
+                            "Mozilla/5.0 (iPad; CPU OS 13_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/91.0.4472.77 Mobile/15E148 Safari/604.1",
+                            "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+                            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36 Edg/91.0.100.0",
+                            "Mozilla/5.0 (iPad; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1"
+    })
+    public void userAgentTest(String userAgent){
+        Response response = RestAssured
+                .given()
+                .header("user-agent", userAgent)
+                .get("https://playground.learnqa.ru/ajax/api/user_agent_check")
+                .andReturn();
+        if (response.jsonPath().get("device").equals("Unknown")){
+            System.out.println("user-agent " + userAgent + " returned an incorrect value for device");
+        } if (response.jsonPath().get("browser").equals("Unknown")) {
+            System.out.println("user-agent " + userAgent + " returned an incorrect value for browser");
+        } if (response.jsonPath().get("platform").equals("Unknown")) {
+            System.out.println("user-agent " + userAgent + " returned an incorrect value for platform");
+        }
+    }
 }
