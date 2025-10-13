@@ -16,7 +16,7 @@ public class BaseTestCase {
     }
 
     protected String getCookie (Response Response, String name){
-        Map<String, String> cookies =Response.getCookies();
+        Map<String, String> cookies = Response.getCookies();
 
         assertTrue(cookies.containsKey(name), "Response doesn`t have cookie with name " + name);
         return cookies.get(name);

@@ -1,6 +1,6 @@
 # Compiled class file
 *.class
-.idea
+LearnQA_JavaAPI/.idea
 allure-results/
 # Log file
 *.log

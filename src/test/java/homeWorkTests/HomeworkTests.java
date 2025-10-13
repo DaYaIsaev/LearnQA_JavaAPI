@@ -92,8 +92,6 @@ public class HomeworkTests {
         fields = getJsonFields(token);
         assertEquals(expectedStatusTokenDelay, fields.get("status"));
         assertEquals(expectedResult, fields.get("result"));
-
-
     }
 
     public Map<String, Object> getJsonFields(String token) {
@@ -117,8 +115,8 @@ public class HomeworkTests {
         data.put("login", "super_admin");
 
         List<String> passwords = getPasswords2019("https://en.wikipedia.org/wiki/List_of_the_most_common_passwords");
-        for (int i = 0; i < passwords.size(); i++) {
 
+        for (int i = 0; i < passwords.size(); i++) {
             data.put("password", passwords.get(i));
             System.out.println(data);
             Response response = RestAssured
@@ -189,7 +187,7 @@ public class HomeworkTests {
 
     @Test
     public void checkShortStringTest(){
-        String hello = "Hello, world";
+        String hello = "Hello, world!!!!";
         assertTrue( hello.length() > 15,"String should be more than 15 symbols");
     }
 

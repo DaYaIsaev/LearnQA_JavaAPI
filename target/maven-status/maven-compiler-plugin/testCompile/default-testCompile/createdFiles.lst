@@ -1,0 +1,9 @@
+lib/ApiCoreRequests.class
+lib/DataGenerator.class
+tests/userEditTest.class
+lib/BaseTestCase.class
+tests/UserAuthTest.class
+tests/UserGetTest.class
+lib/Assertions.class
+tests/userRegisterTest.class
+homeWorkTests/HomeworkTests.class
