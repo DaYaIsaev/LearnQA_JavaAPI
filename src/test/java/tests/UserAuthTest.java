@@ -26,7 +26,7 @@ public class UserAuthTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
     //@BeforeEach
-    public void loginUser(){
+    public void loginUser() {
         Map<String, String> authData = new HashMap<>();
         authData.put("email", "vinkotov@example.com");
         authData.put("password", "1234");
@@ -35,37 +35,37 @@ public class UserAuthTest extends BaseTestCase {
                 .makePostRequest("https://playground.learnqa.ru/api/user/login", authData);
         this.coockie = this.getCookie(responseGetAuth, "auth_sid");
         this.header = this.getHeader(responseGetAuth, "x-csrf-token");
-        this.userIdOnAuth = this.getIntFromJson(responseGetAuth,"user_id");
+        this.userIdOnAuth = this.getIntFromJson(responseGetAuth, "user_id");
     }
 
     @Test
     @Description("This test successfully authorize by email and password")
     @DisplayName("Test positive auth user")
-    public void testAuthUser(){
+    public void testAuthUser() {
 
         Response responseCheckAuth = apiCoreRequests
                 .makeGetRequest(
                         "https://playground.learnqa.ru/api/user/auth",
                         this.header,
                         this.coockie);
-        Assertions.assertJsonByName(responseCheckAuth,"user_id", this.userIdOnAuth);
+        Assertions.assertJsonByName(responseCheckAuth, "user_id", this.userIdOnAuth);
     }
 
     @Description("This test check authorization status w/o sending auth cookie or token")
     @DisplayName("Test negative auth user")
     @ParameterizedTest
     @ValueSource(strings = {"cookie", "headers"})
-    public void testNegativeAuthUser(String condition){
+    public void testNegativeAuthUser(String condition) {
         if (condition.equals("cookie")) {
             Response responseForCheck = apiCoreRequests.makeGetRequestWithCookie(
                     "https://playground.learnqa.ru/api/user/auth",
                     this.coockie);
-            Assertions.assertJsonByName(responseForCheck,"user_id",0);
-        } else if (condition.equals("headers")){
+            Assertions.assertJsonByName(responseForCheck, "user_id", 0);
+        } else if (condition.equals("headers")) {
             Response responseForCheck = apiCoreRequests.makeGetRequestWithToken(
                     "https://playground.learnqa.ru/api/user/auth",
                     this.header);
-            Assertions.assertJsonByName(responseForCheck,"user_id",0);
+            Assertions.assertJsonByName(responseForCheck, "user_id", 0);
         } else {
             throw new IllegalArgumentException("Condition value is not known: " + condition);
         }
@@ -76,7 +76,7 @@ public class UserAuthTest extends BaseTestCase {
     @Test
     public void testCreateUserWithIncorrectDomain() {
         //String email = DataGenerator.getRandomEmail(false);
-        Map<String, String> userData = DataGenerator.getRegistrationData(20,false);
+        Map<String, String> userData = DataGenerator.getRegistrationData(20, false);
         Response responseCreateUser = apiCoreRequests.makePostRequest(
                 "https://playground.learnqa.ru/api/user/",
                 userData);
@@ -89,8 +89,8 @@ public class UserAuthTest extends BaseTestCase {
     @DisplayName("Test negative creation user")
     @ParameterizedTest
     @ValueSource(strings = {"email", "password", "username", "firstName", "lastName"})
-    public void testNegativeCreateUserWithoutField(String condition){
-        Map<String, String> userData = DataGenerator.getRegistrationData(20,true);
+    public void testNegativeCreateUserWithoutField(String condition) {
+        Map<String, String> userData = DataGenerator.getRegistrationData(20, true);
         if (condition.equals("email")) {
             userData.remove("email");
             Response responseForCheck = apiCoreRequests.makePostRequest(
@@ -99,7 +99,7 @@ public class UserAuthTest extends BaseTestCase {
             System.out.println(responseForCheck.asString());
 
             Assertions.assertResponseCodeEquals(responseForCheck, 400);
-            Assertions.assertResponseTextEquals(responseForCheck,"The following required params are missed: " + condition);
+            Assertions.assertResponseTextEquals(responseForCheck, "The following required params are missed: " + condition);
 
         } else if (condition.equals("password")) {
             userData.remove("password");
@@ -108,7 +108,7 @@ public class UserAuthTest extends BaseTestCase {
                     userData);
 
             Assertions.assertResponseCodeEquals(responseForCheck, 400);
-            Assertions.assertResponseTextEquals(responseForCheck,"The following required params are missed: " + condition);
+            Assertions.assertResponseTextEquals(responseForCheck, "The following required params are missed: " + condition);
 
         } else if (condition.equals("username")) {
             userData.remove("username");
@@ -117,7 +117,7 @@ public class UserAuthTest extends BaseTestCase {
                     userData);
 
             Assertions.assertResponseCodeEquals(responseForCheck, 400);
-            Assertions.assertResponseTextEquals(responseForCheck,"The following required params are missed: " + condition);
+            Assertions.assertResponseTextEquals(responseForCheck, "The following required params are missed: " + condition);
 
         } else if (condition.equals("firstName")) {
             userData.remove("firstName");
@@ -126,7 +126,7 @@ public class UserAuthTest extends BaseTestCase {
                     userData);
 
             Assertions.assertResponseCodeEquals(responseForCheck, 400);
-            Assertions.assertResponseTextEquals(responseForCheck,"The following required params are missed: " + condition);
+            Assertions.assertResponseTextEquals(responseForCheck, "The following required params are missed: " + condition);
 
         } else if (condition.equals("lastName")) {
             userData.remove("lastName");
@@ -135,10 +135,9 @@ public class UserAuthTest extends BaseTestCase {
                     userData);
 
             Assertions.assertResponseCodeEquals(responseForCheck, 400);
-            Assertions.assertResponseTextEquals(responseForCheck,"The following required params are missed: " + condition);
+            Assertions.assertResponseTextEquals(responseForCheck, "The following required params are missed: " + condition);
 
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Condition value is not known: " + condition);
         }
     }
@@ -148,13 +147,13 @@ public class UserAuthTest extends BaseTestCase {
     @Test
     public void testCreateUserShortName() {
         //String email = DataGenerator.getRandomEmail(false);
-        Map<String, String> userData = DataGenerator.getRegistrationData(1,true);
+        Map<String, String> userData = DataGenerator.getRegistrationData(1, true);
         Response responseCreateUser = apiCoreRequests.makePostRequest(
                 "https://playground.learnqa.ru/api/user/",
                 userData);
         System.out.println(responseCreateUser.asString());
         Assertions.assertResponseCodeEquals(responseCreateUser, 200);
-        Assertions.assertJsonHasField(responseCreateUser,"id");
+        Assertions.assertJsonHasField(responseCreateUser, "id");
     }
 
     @Description("This test check creation of user with short email name")
@@ -162,12 +161,12 @@ public class UserAuthTest extends BaseTestCase {
     @Test
     public void testCreateUserLongName() {
         //String email = DataGenerator.getRandomEmail(false);
-        Map<String, String> userData = DataGenerator.getRegistrationData(251,true);
+        Map<String, String> userData = DataGenerator.getRegistrationData(251, true);
         Response responseCreateUser = apiCoreRequests.makePostRequest(
                 "https://playground.learnqa.ru/api/user/",
                 userData);
         System.out.println(responseCreateUser.asString());
         Assertions.assertResponseCodeEquals(responseCreateUser, 400);
-        Assertions.assertResponseTextEquals(responseCreateUser,"The value of 'email' field is too long");
+        Assertions.assertResponseTextEquals(responseCreateUser, "The value of 'email' field is too long");
     }
 }
