@@ -156,7 +156,7 @@ public class UserAuthTest extends BaseTestCase {
         Assertions.assertJsonHasField(responseCreateUser, "id");
     }
 
-    @Description("This test check creation of user with short email name")
+    @Description("This test check creation of user with long email name")
     @DisplayName("Test negative creation user")
     @Test
     public void testCreateUserLongName() {
