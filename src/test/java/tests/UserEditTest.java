@@ -18,10 +18,7 @@ import java.util.Map;
 
 public class UserEditTest extends BaseTestCase {
 
-
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
-
-
 
     @Test
     public void testEditJustCreatedTest(){
@@ -70,29 +67,6 @@ public class UserEditTest extends BaseTestCase {
 
         Assertions.assertJsonByName(responseUserData, "firstName",newName);
         System.out.println(responseUserData.asString());
-
-    }
-
-    public UserAuthData getRandomCreateUserAuthData(){
-        Map<String, String> userData = DataGenerator.getRegistrationData(20, true);
-
-        Response responseCreateUser = apiCoreRequests.makePostRequest(
-                "https://playground.learnqa.ru/api/user/",
-                userData);
-
-        Map<String, String> authData = new HashMap<>();
-        authData.put("email", userData.get("email"));
-        authData.put("password", userData.get("password"));
-
-        Response responseGetAuth = apiCoreRequests.makePostRequest(
-                "https://playground.learnqa.ru/api/user/login",
-                authData);
-
-        String header = this.getHeader(responseGetAuth, "x-csrf-token");
-        String cookie = this.getCookie(responseGetAuth, "auth_sid");
-        String userId = responseGetAuth.jsonPath().getString("user_id");
-        UserAuthData userAuthData = new UserAuthData(userId, header, cookie);
-        return userAuthData;
     }
 
     @Description("This test check edit user w/o authorization")
@@ -111,7 +85,6 @@ public class UserEditTest extends BaseTestCase {
                 editData);
         Assertions.assertResponseCodeEquals(editUser,400);
         Assertions.assertJsonByName(editUser,"error","Auth token not supplied");
-
     }
 
     @Description("This test check edit user another user")
@@ -132,7 +105,6 @@ public class UserEditTest extends BaseTestCase {
                 editData);
         Assertions.assertResponseCodeEquals(editUser,400);
         Assertions.assertJsonByName(editUser,"error","This user can only edit their own data.");
-
     }
 
     @Description("This test check edit user email w/o @")
@@ -143,12 +115,13 @@ public class UserEditTest extends BaseTestCase {
         String newEmail = DataGenerator.getRandomEmail(15,false);
         Map<String, String> editData = new HashMap<>();
         editData.put("email", newEmail);
+
         Response editUser = apiCoreRequests.makePutRequest(
                 "https://playground.learnqa.ru/api/user/" + userAuthData.getUserId(),
                 userAuthData.getToken(),
                 userAuthData.getCookie(),
                 editData);
-        System.out.println(editUser.asString());
+
         Assertions.assertResponseCodeEquals(editUser,400);
         Assertions.assertJsonByName(editUser,"error","Invalid email format");
 
@@ -159,15 +132,17 @@ public class UserEditTest extends BaseTestCase {
     @Test
     public void testEditUserFirstNameShort(){
         UserAuthData userAuthData = getRandomCreateUserAuthData();
+
         String newFirstName = RandomStringGenerator.randomString(1);
         Map<String, String> editData = new HashMap<>();
         editData.put("firstName", newFirstName);
+
         Response editUser = apiCoreRequests.makePutRequest(
                 "https://playground.learnqa.ru/api/user/" + userAuthData.getUserId(),
                 userAuthData.getToken(),
                 userAuthData.getCookie(),
                 editData);
-        System.out.println(editUser.asString());
+
         Assertions.assertResponseCodeEquals(editUser,400);
         Assertions.assertJsonByName(editUser,"error","The value for field `firstName` is too short");
 

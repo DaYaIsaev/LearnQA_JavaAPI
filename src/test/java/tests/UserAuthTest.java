@@ -2,15 +2,12 @@ package tests;
 
 import io.restassured.response.Response;
 import lib.*;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import lib.ApiCoreRequests;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -24,19 +21,6 @@ public class UserAuthTest extends BaseTestCase {
     String header;
     int userIdOnAuth;
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
-
-    //@BeforeEach
-    public void loginUser() {
-        Map<String, String> authData = new HashMap<>();
-        authData.put("email", "vinkotov@example.com");
-        authData.put("password", "1234");
-
-        Response responseGetAuth = apiCoreRequests
-                .makePostRequest("https://playground.learnqa.ru/api/user/login", authData);
-        this.coockie = this.getCookie(responseGetAuth, "auth_sid");
-        this.header = this.getHeader(responseGetAuth, "x-csrf-token");
-        this.userIdOnAuth = this.getIntFromJson(responseGetAuth, "user_id");
-    }
 
     @Test
     @Description("This test successfully authorize by email and password")
@@ -75,7 +59,6 @@ public class UserAuthTest extends BaseTestCase {
     @DisplayName("Test negative creation user")
     @Test
     public void testCreateUserWithIncorrectDomain() {
-        //String email = DataGenerator.getRandomEmail(false);
         Map<String, String> userData = DataGenerator.getRegistrationData(20, false);
         Response responseCreateUser = apiCoreRequests.makePostRequest(
                 "https://playground.learnqa.ru/api/user/",
@@ -160,7 +143,6 @@ public class UserAuthTest extends BaseTestCase {
     @DisplayName("Test negative creation user")
     @Test
     public void testCreateUserLongName() {
-        //String email = DataGenerator.getRandomEmail(false);
         Map<String, String> userData = DataGenerator.getRegistrationData(251, true);
         Response responseCreateUser = apiCoreRequests.makePostRequest(
                 "https://playground.learnqa.ru/api/user/",
