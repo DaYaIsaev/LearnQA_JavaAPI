@@ -23,7 +23,7 @@ public class UserGetTest extends BaseTestCase {
     @Test
     public void getUserDataNotAuth() {
         Response responseUserData = RestAssured
-                .get("https://playground.learnqa.ru/api/user/2")
+                .get("https://playground.learnqa.ru/api_dev/user/2")
                 .andReturn();
         Assertions.assertJsonHasField(responseUserData, "username");
         Assertions.assertJsonHasNotField(responseUserData, "firstName");
@@ -40,7 +40,7 @@ public class UserGetTest extends BaseTestCase {
         Response responseGetAuth = RestAssured
                 .given()
                 .body(authData)
-                .post("https://playground.learnqa.ru/api/user/login")
+                .post("https://playground.learnqa.ru/api_dev/user/login")
                 .andReturn();
 
         String header = this.getHeader(responseGetAuth, "x-csrf-token");
@@ -50,7 +50,7 @@ public class UserGetTest extends BaseTestCase {
                 .given()
                 .header("x-csrf-token", header)
                 .cookie("auth_sid", cookie)
-                .get("https://playground.learnqa.ru/api/user/2")
+                .get("https://playground.learnqa.ru/api_dev/user/2")
                 .andReturn();
 
         String[] expectedFields = {"username", "firstName", "lastName", "email"};
@@ -65,7 +65,7 @@ public class UserGetTest extends BaseTestCase {
         Map<String, String> userData = DataGenerator.getRegistrationData(20, true);
 
         Response responseCreateUser = apiCoreRequests.makePostRequest(
-                "https://playground.learnqa.ru/api/user/",
+                "https://playground.learnqa.ru/api_dev/user/",
                 userData);
 
         Map<String, String> authData = new HashMap<>();
@@ -73,7 +73,7 @@ public class UserGetTest extends BaseTestCase {
         authData.put("password", userData.get("password"));
 
         Response responseGetAuth = apiCoreRequests.makePostRequest(
-                "https://playground.learnqa.ru/api/user/login",
+                "https://playground.learnqa.ru/api_dev/user/login",
                 authData);
 
         String header = this.getHeader(responseGetAuth, "x-csrf-token");
@@ -81,7 +81,7 @@ public class UserGetTest extends BaseTestCase {
         String userId = responseGetAuth.jsonPath().getString("user_id");
 
         Response responseGetDetailInfo = apiCoreRequests.makeGetRequest(
-                "https://playground.learnqa.ru/api/user/" + userId,
+                "https://playground.learnqa.ru/api_dev/user/" + userId,
                 header,
                 cookie);
 
@@ -98,14 +98,14 @@ public class UserGetTest extends BaseTestCase {
 
         Map<String, String> userData = DataGenerator.getRegistrationData(20, true);
         Response responseCreateUser = apiCoreRequests.makePostRequest(
-                "https://playground.learnqa.ru/api/user/",
+                "https://playground.learnqa.ru/api_dev/user/",
                 userData);
 
         Map<String, String> authData = new HashMap<>();
         authData.put("email", userData.get("email"));
         authData.put("password", userData.get("password"));
         Response responseGetAuth = apiCoreRequests.makePostRequest(
-                "https://playground.learnqa.ru/api/user/login",
+                "https://playground.learnqa.ru/api_dev/user/login",
                 authData);
 
         String header = this.getHeader(responseGetAuth, "x-csrf-token");
@@ -113,13 +113,13 @@ public class UserGetTest extends BaseTestCase {
 
         Map<String, String> newUserData = DataGenerator.getRegistrationData(20, true);
         Response responseCreateNewUser = apiCoreRequests.makePostRequest(
-                "https://playground.learnqa.ru/api/user/",
+                "https://playground.learnqa.ru/api_dev/user/",
                 newUserData);
 
         String userId = responseCreateNewUser.jsonPath().getString("id");
 
         Response responseGetDetailInfo = apiCoreRequests.makeGetRequest(
-                "https://playground.learnqa.ru/api/user/" + userId,
+                "https://playground.learnqa.ru/api_dev/user/" + userId,
                 header,
                 cookie);
 

@@ -1,5 +1,6 @@
 package tests;
 
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.*;
 import org.junit.jupiter.api.Test;
@@ -8,9 +9,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import lib.ApiCoreRequests;
 import java.util.HashMap;
 import java.util.Map;
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
+
 import org.junit.jupiter.api.DisplayName;
 
 @Epic("Authorisation cases")
@@ -25,11 +24,12 @@ public class UserAuthTest extends BaseTestCase {
     @Test
     @Description("This test successfully authorize by email and password")
     @DisplayName("Test positive auth user")
+    @Severity(SeverityLevel.BLOCKER)
     public void testAuthUser() {
 
         Response responseCheckAuth = apiCoreRequests
                 .makeGetRequest(
-                        "https://playground.learnqa.ru/api/user/auth",
+                        "https://playground.learnqa.ru/api_dev/user/auth",
                         this.header,
                         this.coockie);
         Assertions.assertJsonByName(responseCheckAuth, "user_id", this.userIdOnAuth);
@@ -42,12 +42,12 @@ public class UserAuthTest extends BaseTestCase {
     public void testNegativeAuthUser(String condition) {
         if (condition.equals("cookie")) {
             Response responseForCheck = apiCoreRequests.makeGetRequestWithCookie(
-                    "https://playground.learnqa.ru/api/user/auth",
+                    "https://playground.learnqa.ru/api_dev/user/auth",
                     this.coockie);
             Assertions.assertJsonByName(responseForCheck, "user_id", 0);
         } else if (condition.equals("headers")) {
             Response responseForCheck = apiCoreRequests.makeGetRequestWithToken(
-                    "https://playground.learnqa.ru/api/user/auth",
+                    "https://playground.learnqa.ru/api_dev/user/auth",
                     this.header);
             Assertions.assertJsonByName(responseForCheck, "user_id", 0);
         } else {
@@ -61,7 +61,7 @@ public class UserAuthTest extends BaseTestCase {
     public void testCreateUserWithIncorrectDomain() {
         Map<String, String> userData = DataGenerator.getRegistrationData(20, false);
         Response responseCreateUser = apiCoreRequests.makePostRequest(
-                "https://playground.learnqa.ru/api/user/",
+                "https://playground.learnqa.ru/api_dev/user/",
                 userData);
 
         Assertions.assertResponseCodeEquals(responseCreateUser, 400);
@@ -77,7 +77,7 @@ public class UserAuthTest extends BaseTestCase {
         if (condition.equals("email")) {
             userData.remove("email");
             Response responseForCheck = apiCoreRequests.makePostRequest(
-                    "https://playground.learnqa.ru/api/user/",
+                    "https://playground.learnqa.ru/api_dev/user/",
                     userData);
             System.out.println(responseForCheck.asString());
 
@@ -87,7 +87,7 @@ public class UserAuthTest extends BaseTestCase {
         } else if (condition.equals("password")) {
             userData.remove("password");
             Response responseForCheck = apiCoreRequests.makePostRequest(
-                    "https://playground.learnqa.ru/api/user/",
+                    "https://playground.learnqa.ru/api_dev/user/",
                     userData);
 
             Assertions.assertResponseCodeEquals(responseForCheck, 400);
@@ -96,7 +96,7 @@ public class UserAuthTest extends BaseTestCase {
         } else if (condition.equals("username")) {
             userData.remove("username");
             Response responseForCheck = apiCoreRequests.makePostRequest(
-                    "https://playground.learnqa.ru/api/user/",
+                    "https://playground.learnqa.ru/api_dev/user/",
                     userData);
 
             Assertions.assertResponseCodeEquals(responseForCheck, 400);
@@ -105,7 +105,7 @@ public class UserAuthTest extends BaseTestCase {
         } else if (condition.equals("firstName")) {
             userData.remove("firstName");
             Response responseForCheck = apiCoreRequests.makePostRequest(
-                    "https://playground.learnqa.ru/api/user/",
+                    "https://playground.learnqa.ru/api_dev/user/",
                     userData);
 
             Assertions.assertResponseCodeEquals(responseForCheck, 400);
@@ -114,7 +114,7 @@ public class UserAuthTest extends BaseTestCase {
         } else if (condition.equals("lastName")) {
             userData.remove("lastName");
             Response responseForCheck = apiCoreRequests.makePostRequest(
-                    "https://playground.learnqa.ru/api/user/",
+                    "https://playground.learnqa.ru/api_dev/user/",
                     userData);
 
             Assertions.assertResponseCodeEquals(responseForCheck, 400);
@@ -132,7 +132,7 @@ public class UserAuthTest extends BaseTestCase {
         //String email = DataGenerator.getRandomEmail(false);
         Map<String, String> userData = DataGenerator.getRegistrationData(1, true);
         Response responseCreateUser = apiCoreRequests.makePostRequest(
-                "https://playground.learnqa.ru/api/user/",
+                "https://playground.learnqa.ru/api_dev/user/",
                 userData);
         System.out.println(responseCreateUser.asString());
         Assertions.assertResponseCodeEquals(responseCreateUser, 200);
@@ -145,7 +145,7 @@ public class UserAuthTest extends BaseTestCase {
     public void testCreateUserLongName() {
         Map<String, String> userData = DataGenerator.getRegistrationData(251, true);
         Response responseCreateUser = apiCoreRequests.makePostRequest(
-                "https://playground.learnqa.ru/api/user/",
+                "https://playground.learnqa.ru/api_dev/user/",
                 userData);
         System.out.println(responseCreateUser.asString());
         Assertions.assertResponseCodeEquals(responseCreateUser, 400);

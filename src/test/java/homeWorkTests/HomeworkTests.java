@@ -26,7 +26,7 @@ public class HomeworkTests {
         JsonPath response = RestAssured
                 .given()
                 .when()
-                .get("https://playground.learnqa.ru/api/get_json_homework")
+                .get("https://playground.learnqa.ru/api_dev/get_json_homework")
                 .jsonPath();
 
         System.out.println(response.getMap("messages[1]"));
@@ -39,7 +39,7 @@ public class HomeworkTests {
                 .given()
                 .redirects()
                 .follow(true)
-                .get("https://playground.learnqa.ru/api/long_redirect")
+                .get("https://playground.learnqa.ru/api_dev/long_redirect")
                 .andReturn();
 
         String headerLocation = response.getHeader("Location");
@@ -52,7 +52,7 @@ public class HomeworkTests {
                 .given()
                 .redirects()
                 .follow(false)
-                .get("https://playground.learnqa.ru/api/long_redirect")
+                .get("https://playground.learnqa.ru/api_dev/long_redirect")
                 .andReturn();
         String headerLocation = response.getHeader("Location");
         System.out.println(headerLocation);
@@ -81,7 +81,7 @@ public class HomeworkTests {
         String expectedResult = "42";
         JsonPath json = RestAssured
                 .given()
-                .get("https://playground.learnqa.ru/ajax/api/longtime_job")
+                .get("https://playground.learnqa.ru/ajax/api_dev/longtime_job")
                 .jsonPath();
         token = json.get("token");
         int seconds = json.get("seconds");
@@ -99,7 +99,7 @@ public class HomeworkTests {
         JsonPath json = RestAssured
                 .given()
                 .queryParams("token", token)
-                .get("https://playground.learnqa.ru/ajax/api/longtime_job")
+                .get("https://playground.learnqa.ru/ajax/api_dev/longtime_job")
                 .jsonPath();
         String status = json.get("status");
         String result = json.get("result");
@@ -123,7 +123,7 @@ public class HomeworkTests {
                     .given()
                     .body(data)
                     .when()
-                    .post("https://playground.learnqa.ru/ajax/api/get_secret_password_homework")
+                    .post("https://playground.learnqa.ru/ajax/api_dev/get_secret_password_homework")
                     .andReturn();
             response.prettyPrint();
 
@@ -137,7 +137,7 @@ public class HomeworkTests {
                     .given()
                     .cookies(coockeis)
                     .when()
-                    .get("https://playground.learnqa.ru/ajax/api/check_auth_cookie")
+                    .get("https://playground.learnqa.ru/ajax/api_dev/check_auth_cookie")
                     .andReturn();
             if (Objects.equals(responseCookie.getBody().asString(), "You are authorized")) {
                 System.out.println("Ваш пароль: " + passwords.get(i));
@@ -191,7 +191,7 @@ public class HomeworkTests {
     @Test
     public void cookieMethodTest() {
         Response response = RestAssured
-                .get("https://playground.learnqa.ru/api/homework_cookie")
+                .get("https://playground.learnqa.ru/api_dev/homework_cookie")
                 .andReturn();
         String cookieValue = response.getCookie("HomeWork");
         assertEquals(200, response.getStatusCode(), "Unexpected response status");
@@ -202,7 +202,7 @@ public class HomeworkTests {
     @Test
     public void headerMethodTest(){
         Response response = RestAssured
-                .get("https://playground.learnqa.ru/api/homework_header")
+                .get("https://playground.learnqa.ru/api_dev/homework_header")
                 .andReturn();
         String cookieValue = response.getHeaders().getValue("x-secret-homework-header");
         assertEquals(200, response.getStatusCode(), "Unexpected response status");
@@ -222,7 +222,7 @@ public class HomeworkTests {
         Response response = RestAssured
                 .given()
                 .header("user-agent", userAgent)
-                .get("https://playground.learnqa.ru/ajax/api/user_agent_check")
+                .get("https://playground.learnqa.ru/ajax/api_dev/user_agent_check")
                 .andReturn();
         if (response.jsonPath().get("device").equals("Unknown")){
             System.out.println("user-agent " + userAgent + " returned an incorrect value for device");

@@ -23,7 +23,7 @@ public class UserRegisterTest extends BaseTestCase {
         Response responseCreateAuth = RestAssured
                 .given()
                 .body(userData)
-                .post("https://playground.learnqa.ru/api/user/")
+                .post("https://playground.learnqa.ru/api_dev/user/")
                 .andReturn();
 
         Assertions.assertResponseTextEquals(responseCreateAuth, "Users with email '" + email + "' already exists");
@@ -38,7 +38,7 @@ public class UserRegisterTest extends BaseTestCase {
         Response responseCreateAuth = RestAssured
                 .given()
                 .body(userData)
-                .post("https://playground.learnqa.ru/api/user/")
+                .post("https://playground.learnqa.ru/api_dev/user/")
                 .andReturn();
 
         Assertions.assertResponseCodeEquals(responseCreateAuth, 200);
@@ -52,7 +52,7 @@ public class UserRegisterTest extends BaseTestCase {
         Response responseCreateAuth = RestAssured
                 .given()
                 .body(userData)
-                .post("https://playground.learnqa.ru/api/user/")
+                .post("https://playground.learnqa.ru/api_dev/user/")
                 .andReturn();
 
         Assertions.assertResponseCodeEquals(responseCreateAuth, 400);

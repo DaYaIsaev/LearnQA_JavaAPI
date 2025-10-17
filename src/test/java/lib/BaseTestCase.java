@@ -34,7 +34,7 @@ public class BaseTestCase {
 
     protected UserAuthData userLogin(Map<String, String> authData) {
         Response responseGetAuth = apiCoreRequests
-                .makePostRequest("https://playground.learnqa.ru/api/user/login", authData);
+                .makePostRequest("https://playground.learnqa.ru/api_dev/user/login", authData);
         String cookie = this.getCookie(responseGetAuth, "auth_sid");
         String token = this.getHeader(responseGetAuth, "x-csrf-token");
         int userId = this.getIntFromJson(responseGetAuth, "user_id");
@@ -47,7 +47,7 @@ public class BaseTestCase {
         Map<String, String> userData = DataGenerator.getRegistrationData(20, true);
 
         Response responseCreateUser = apiCoreRequests.makePostRequest(
-                "https://playground.learnqa.ru/api/user/",
+                "https://playground.learnqa.ru/api_dev/user/",
                 userData);
 
         Map<String, String> authData = new HashMap<>();
@@ -55,7 +55,7 @@ public class BaseTestCase {
         authData.put("password", userData.get("password"));
 
         Response responseGetAuth = apiCoreRequests.makePostRequest(
-                "https://playground.learnqa.ru/api/user/login",
+                "https://playground.learnqa.ru/api_dev/user/login",
                 authData);
 
         String header = this.getHeader(responseGetAuth, "x-csrf-token");
